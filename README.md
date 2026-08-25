@@ -1,64 +1,86 @@
-# Deploy thiệp cưới lên GitHub Pages
+# Thiệp cưới Hoàng Phong & Hồng Nhung — hướng dẫn deploy
 
-Thư mục này là **nội dung web tĩnh đã hoàn chỉnh** — không cần build, không cần sửa code.
-Việc cần làm: đẩy nguyên thư mục này lên GitHub và bật GitHub Pages.
+Trang thiệp cưới tĩnh (HTML/CSS/JS thuần, không build step). Nhiệm vụ: **đẩy thư mục này lên GitHub và bật GitHub Pages**. Không cần sửa code, không cần framework.
 
-## Thông tin
+- Repo đích: `hoangphong2104/wedding`, branch `main`
+- Nội dung deploy: **toàn bộ nội dung bên trong thư mục `deploy/`** đặt ở **root của repo** (không lồng thêm một cấp `deploy/`)
 
-- Repo đích: `hoangphong2104/wedding` (đang trống)
-- Branch: `main`
-- Nguồn Pages: branch `main`, folder `/ (root)`
-
-## Nội dung thư mục
+## Cấu trúc cần có ở root repo
 
 ```
-index.html      trang chọn thiệp (2 link)
-.nojekyll       BẮT BUỘC giữ lại
-fonts/          font dùng chung cho cả 2 thiệp
-P-N/            thiệp nhà trai  (index.html + images/ + js/)
-N-P/            thiệp nhà gái   (index.html + images/ + js/)
+.nojekyll          ← BẮT BUỘC, file rỗng
+index.html         ← trang chọn thiệp (link sang 2 bản)
+fonts/             ← 8 font .ttf/.otf dùng chung cho cả 2 bản
+P-N/
+  index.html       ← thiệp nhà trai (Phong & Nhung)
+  images/          ← 90+ ảnh/icon
+  js/
+N-P/
+  index.html       ← thiệp nhà gái (Nhung & Phong)
+  images/
+  js/
 ```
 
-## Ràng buộc quan trọng
-
-1. **Phải có `.nojekyll` ở root.** Nhiều ảnh có tên bắt đầu bằng `_` (ví dụ `_0026_clear-white-plaster-texture-pattern-copy-11-...png`); nếu Jekyll chạy, GitHub sẽ bỏ qua các file đó và thiệp mất ảnh nền. File này là file rỗng, dễ bị mất khi upload bằng kéo–thả trên web.
-2. **Giữ nguyên cấu trúc thư mục.** `P-N/index.html` và `N-P/index.html` tham chiếu font theo đường dẫn `../fonts/...`, nên `fonts/` phải nằm cùng cấp với `P-N/` và `N-P/`.
-3. **Giữ nguyên tên file, kể cả chữ hoa/thường.** GitHub Pages phân biệt hoa thường; ảnh có phần mở rộng `.JPG`/`.jpg` khác nhau.
-4. Không đổi tên `P-N` / `N-P` (tránh ký tự `&` vì làm hỏng link khi gửi qua Zalo/Messenger).
-5. Không sửa nội dung HTML/CSS/ảnh — đây là bản đã chốt với khách.
+`P-N/index.html` và `N-P/index.html` tham chiếu font bằng đường dẫn tương đối `../fonts/...`, nên **cấu trúc thư mục phải giữ đúng như trên**, không được làm phẳng hay đổi tên `fonts/`.
 
 ## Các bước
 
-```bash
-cd <thư-mục-này>
-git init -b main
-git add -A                      # kiểm tra .nojekyll đã được add
-git commit -m "Wedding invitation site: P-N (nhà trai), N-P (nhà gái)"
-git remote add origin git@github.com:hoangphong2104/wedding.git   # hoặc https://
-git push -u origin main
+1. Clone `hoangphong2104/wedding` (repo hiện đang trống).
+2. Copy toàn bộ nội dung bên trong `deploy/` vào root repo.
+3. Kiểm tra `.nojekyll` **thật sự tồn tại** ở root. Đây là điểm dễ sai nhất: nhiều công cụ và giao diện web GitHub bỏ qua file ẩn. Không có nó, Jekyll sẽ **bỏ qua mọi file bắt đầu bằng `_`** — trong đó có ảnh nền vân giấy `images/_0026_clear-white-plaster-texture-pattern-copy-11-...png`, làm hỏng nền của cả hai bản thiệp.
+4. Commit + push lên `main`.
+5. Settings → Pages → Source: **Deploy from a branch** → Branch `main`, folder `/ (root)` → Save.
+6. Chờ 1–2 phút rồi kiểm tra 3 link ở mục dưới.
+
+## Link sau khi deploy
+
+| Trang | URL |
+| --- | --- |
+| Trang chọn thiệp | `https://hoangphong2104.github.io/wedding/` |
+| Thiệp nhà trai | `https://hoangphong2104.github.io/wedding/P-N/` |
+| Thiệp nhà gái | `https://hoangphong2104.github.io/wedding/N-P/` |
+
+Tên thư mục dùng `P-N` / `N-P` thay vì `P&N` / `N&P` — ký tự `&` phá URL khi gửi qua Zalo/Messenger.
+
+## Tính năng tên khách (đừng làm mất khi deploy)
+
+Mỗi thiệp mở bằng một màn "mở thiệp" đọc tên khách từ query string:
+
+```
+https://hoangphong2104.github.io/wedding/P-N/?guest=Anh%20Nguy%E1%BB%85n%20V%C4%83n%20Nam
 ```
 
-Sau đó bật Pages (dùng `gh` nếu có):
+- Nhận `?guest=`, `?ten=`, `?khach=`, `?name=` (lấy giá trị đầu tiên có mặt).
+- Không có tên → hiện "Trân trọng kính mời / quý khách", không lỗi, không khoảng trắng lạ.
+- Màn mở thiệp tự mở sau 3 giây, hoặc chạm/click vào bất kỳ đâu để mở ngay.
+- Toàn bộ logic nằm inline trong từng `index.html` (`<style id="om-cover-css">` + `<div id="om-cover">` + script cuối `<body>`). Không tách file, không thêm dependency.
 
-```bash
-gh api -X POST repos/hoangphong2104/wedding/pages \
-  -f "source[branch]=main" -f "source[path]=/"
-```
-
-Hoặc thủ công: repo → Settings → Pages → Source: *Deploy from a branch* → `main` / `/ (root)` → Save.
+Cần kiểm tra sau deploy: mở link **có** `?guest=` và link **không có** query, cả hai phải hiển thị đúng.
 
 ## Kiểm tra sau khi deploy
 
-Chờ 1–2 phút, mở và xác nhận cả 3 link trả về 200 và **hiển thị đủ ảnh** (đặc biệt ảnh nền vân giấy):
+- [ ] 3 URL trên đều load, không 404
+- [ ] Nền vân giấy hiện đúng (nếu nền trắng trơn → thiếu `.nojekyll`)
+- [ ] Font chữ viết tay/script hiện đúng, không rơi về serif hệ thống (nếu rơi → sai đường dẫn `fonts/`)
+- [ ] Màn mở thiệp cao đúng 1 màn hình điện thoại, không kéo dài theo cả trang
+- [ ] Ảnh trong album và các mục đều load
+- [ ] Form RSVP hiển thị và submit được
+- [ ] Thử trên điện thoại thật (Safari iOS + Chrome Android), không chỉ trên desktop
 
-- https://hoangphong2104.github.io/wedding/
-- https://hoangphong2104.github.io/wedding/P-N/
-- https://hoangphong2104.github.io/wedding/N-P/
+## Lưu ý kỹ thuật
 
-Kiểm tra thêm:
-- Mở trên điện thoại: thiệp full màn hình.
-- Mở trên máy tính (≥768px): thiệp canh giữa trên nền vân giấy, có bóng đổ hai bên.
-- Nút bật/tắt nhạc góc dưới phải hoạt động.
-- Cuộn hết trang: album ảnh, đồng hồ đếm ngược, form xác nhận tham dự đều hiển thị.
+- **Không** chạy formatter/minifier lên các `index.html`. File gốc xuất từ trình dựng trang, CSS/JS inline rất dài và nhạy với thay đổi thứ tự.
+- **Không** đổi tên file ảnh. Tên có hash và một số bắt đầu bằng `_`; markup tham chiếu chính xác từng tên.
+- Không có bước build, không `package.json`, không cần Node. Chỉ là file tĩnh.
+- Nếu sau này gắn domain riêng, thêm file `CNAME` ở root và cập nhật lại link chia sẻ.
 
-Nếu ảnh bị lỗi 404 → gần như chắc chắn `.nojekyll` chưa được commit.
+## File tham khảo (không deploy)
+
+Trong project gốc còn:
+
+- `Preview dien thoai.html` — xem 2 bản thiệp trong khung điện thoại 390×812
+- `Preview may tinh.html` — xem trong khung browser 1280×720
+- `covers/` — 3 phương án màn mở thiệp đã dựng để so sánh (phương án B được chọn)
+- `chu-re-moi/`, `co-dau-moi/` — bản nguồn, giống hệt `deploy/P-N` và `deploy/N-P`
+
+Các file này chỉ để review, **không** đưa lên repo.
