@@ -285,9 +285,9 @@
 #BOX32 > .ladi-box{padding:15px 15px 49px!important;box-sizing:border-box!important;background-color:#fff!important;background-clip:content-box!important;background-size:cover!important;background-position:center 22%!important;box-shadow:rgba(31,33,36,.22) 0 10px 24px -12px!important}
 #BOX42 > .ladi-box{background-size:138% auto!important;background-position:center 68%!important}
 #BOX44 > .ladi-box{background-image:url("images/new-8-wide.jpg")!important;background-size:cover!important;background-position:center center!important}</style><style id="om-desktop">@media (min-width:768px){html{background:#efe9df}body{background:#efe9df url("images/_0026_clear-white-plaster-texture-pattern-copy-11-20251020184301-fkysx.png") repeat!important}.ladi-wraper{width:420px!important;margin:0 auto!important;background:#fff;box-shadow:0 20px 70px rgba(60,50,38,.25)}}</style><style id="om-cover-css">
-#om-cover{position:fixed;top:0;left:0;right:0;height:100dvh;max-height:900px;z-index:2147480000;background:#efe9df url("images/_0026_clear-white-plaster-texture-pattern-copy-11-20251020184301-fkysx.png") repeat;overflow:hidden}#om-cover::after{content:"";position:absolute;left:0;right:0;top:100%;height:300vh;background:#efe9df url("images/_0026_clear-white-plaster-texture-pattern-copy-11-20251020184301-fkysx.png") repeat}
+#om-cover{position:fixed;top:0;left:0;right:0;bottom:0;height:100vh;height:100dvh;z-index:2147480000;background:#efe9df url("images/_0026_clear-white-plaster-texture-pattern-copy-11-20251020184301-fkysx.png") repeat;overflow:hidden}#om-cover::after{content:"";position:absolute;left:0;right:0;top:100%;height:300vh;background:#efe9df url("images/_0026_clear-white-plaster-texture-pattern-copy-11-20251020184301-fkysx.png") repeat}
 #om-cover.omc-gone{display:none}
-.omc-stage{position:absolute;top:0;bottom:0;height:100%;left:50%;transform:translateX(-50%);width:100%;max-width:420px;overflow:hidden;background:#f6f1e7;box-shadow:0 20px 70px rgba(60,50,38,.25)}
+.omc-stage{position:absolute;top:50%;height:100%;left:50%;transform:translate(-50%,-50%);width:100%;max-width:420px;overflow:hidden;background:#f6f1e7;box-shadow:0 20px 70px rgba(60,50,38,.25)}
 .omc-half{position:absolute;top:0;height:100%;width:50%;overflow:hidden;z-index:4;transition:transform 1.25s cubic-bezier(.66,0,.24,1)}
 .omc-half.l{left:0}.omc-half.r{right:0}
 .omc-half i{position:absolute;top:0;width:420px;height:100%;background:url("images/new-3.jpg") center 20%/cover;display:block}
@@ -311,6 +311,7 @@
 #om-cover.omc-open .omc-half.l{transform:translateX(-100%)}
 #om-cover.omc-open .omc-half.r{transform:translateX(100%)}
 html.omc-lock,html.omc-lock body{overflow:hidden!important}
+@media (min-width:768px){.omc-stage{max-height:900px}}
 </style></head><body class=""><template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#f4ecdd"/><rect x="14" y="14" width="172" height="172" fill="none" stroke="#b08654" stroke-width="1.5"/><text x="100" y="96" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="58" fill="#8a6537">P &amp; N</text><text x="100" y="132" text-anchor="middle" font-family="Georgia, serif" font-size="15" letter-spacing="3" fill="#b08654">20.09.2026</text></svg></template><div id="music-toggle" role="button" aria-label="Bật/tắt nhạc" title="Bật nhạc" aria-pressed="false">
   <!-- SOUND ON (waves) -->
   <svg id="icon-on" viewBox="0 0 24 24" fill="none" stroke="#2b2b2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
@@ -793,5 +794,43 @@ c.addEventListener('click',open);
   } else {
     window.addEventListener('load', function(){ setTimeout(boot, 200); });
   }
+})();
+</script>
+
+<script id="om-nobadge">
+(function(){
+  var SIG = 'ladipage.svg';
+  function kill(n){
+    try{
+      if(!n || n.nodeType !== 1) return;
+      if(n.tagName === 'STYLE'){
+        if((n.textContent||'').indexOf(SIG) > -1 && n.parentNode) n.parentNode.removeChild(n);
+        return;
+      }
+      if(n.tagName !== 'DIV' || !n.parentNode) return;
+      var cs = window.getComputedStyle(n);
+      if((cs.backgroundImage||'').indexOf(SIG) > -1 || cs.zIndex === '10000000000'){
+        n.parentNode.removeChild(n);
+      }
+    }catch(e){}
+  }
+  function sweep(){
+    try{
+      var i, st = document.getElementsByTagName('style');
+      for(i = st.length - 1; i >= 0; i--) kill(st[i]);
+      var ch = document.body ? document.body.children : [];
+      for(i = ch.length - 1; i >= 0; i--) kill(ch[i]);
+    }catch(e){}
+  }
+  var mo = new MutationObserver(function(ms){
+    for(var i = 0; i < ms.length; i++){
+      var an = ms[i].addedNodes;
+      for(var j = 0; j < an.length; j++) kill(an[j]);
+    }
+  });
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+  var iv = setInterval(sweep, 400);
+  setTimeout(function(){ clearInterval(iv); sweep(); }, 60000);
+  sweep();
 })();
 </script>
