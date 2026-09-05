@@ -917,3 +917,48 @@ c.addEventListener('click',open);
   window.addEventListener('orientationchange', function(){ setTimeout(run, 400); });
 })();
 </script>
+
+<script id="om-fitsections">
+(function(){
+  var MARK = 'omScaled';
+  function run(){
+    try{
+      var secs = [];
+      [].forEach.call(document.querySelectorAll('.ladi-section'), function(s){
+        secs.push({ el: s, bot: s.getBoundingClientRect().bottom + window.pageYOffset });
+      });
+      if(!secs.length) return;
+
+      [].forEach.call(document.querySelectorAll('.ladi-element'), function(e){
+        if(e.id === 'cx-events') return;
+        if(!e.querySelector(':scope > .ladi-headline')) return;   // chi khoi chu
+        if(e.dataset[MARK]){ e.style.transform = ''; delete e.dataset[MARK]; }
+
+        var r = e.getBoundingClientRect();
+        if(r.height < 10) return;
+        var sec = null;
+        for(var i = 0; i < secs.length; i++){ if(secs[i].el.contains(e)){ sec = secs[i]; break; } }
+        if(!sec) return;
+
+        var top  = r.top + window.pageYOffset;
+        var over = (r.bottom + window.pageYOffset) - sec.bot;
+        if(over <= 2) return;                                     // khong tran -> khong dong vao
+
+        var avail = sec.bot - top;
+        if(avail < 40) return;
+        var k = Math.max(0.5, avail / r.height);
+        e.style.transformOrigin = 'top center';
+        e.style.transform = 'scale(' + k.toFixed(4) + ')';
+        e.dataset[MARK] = '1';
+      });
+    }catch(err){}
+  }
+  function go(){ try{ run(); }catch(e){} }
+  if(document.readyState === 'complete') setTimeout(go, 900);
+  else window.addEventListener('load', function(){ setTimeout(go, 900); });
+  setTimeout(go, 3000);
+  setTimeout(go, 6000);
+  window.addEventListener('resize', function(){ setTimeout(go, 300); });
+  window.addEventListener('orientationchange', function(){ setTimeout(go, 500); });
+})();
+</script>
