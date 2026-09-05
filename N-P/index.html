@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Hồng Nhung & Hoàng Phong</title><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Expires" content="-1"><meta name="keywords" content=""><meta name="description" content="Hồng Nhung & Hoàng Phong"><script type="text/javascript">window.ladi_viewport=function(){var a=document;var j=a.getElementById("viewport");if(!j){j=a.createElement("meta");j.id="viewport";j.name="viewport";a.head.appendChild(j);}j.setAttribute("content","width=420, viewport-fit=cover");window.ladi_is_desktop=false;};window.ladi_viewport();window.ladi_fbq_data = [];window.ladi_fbq = function () {window.ladi_fbq_data.push(arguments);};window.ladi_ttq_data = [];window.ladi_ttq = function () {window.ladi_ttq_data.push(arguments);};</script><meta id="viewport" name="viewport" content="width=420, viewport-fit=cover"><script id="om-fitwidth">
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Hồng Nhung & Hoàng Phong</title><meta http-equiv="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Expires" content="-1"><meta name="keywords" content=""><meta name="description" content="Hồng Nhung & Hoàng Phong"><script type="text/javascript">window.ladi_viewport=function(){var a=document;var j=a.getElementById("viewport");if(!j){j=a.createElement("meta");j.id="viewport";j.name="viewport";a.head.appendChild(j);}j.setAttribute("content","width=420, viewport-fit=cover");window.ladi_is_desktop=false;};window.ladi_viewport();window.ladi_fbq_data = [];window.ladi_fbq = function () {window.ladi_fbq_data.push(arguments);};window.ladi_ttq_data = [];window.ladi_ttq = function () {window.ladi_ttq_data.push(arguments);};</script><meta id="viewport" name="viewport" content="width=420, viewport-fit=cover"><style id="om-textfix">html,body{-webkit-text-size-adjust:100%!important;-moz-text-size-adjust:100%!important;-ms-text-size-adjust:100%!important;text-size-adjust:100%!important}</style><script id="om-fitwidth">
 (function(){
   var DESIGN = 420;
   function fit(){
@@ -212,7 +212,6 @@
   margin: 2px 0 12px;
   letter-spacing: 0;
   font-style: italic;
-  white-space: nowrap;
 }
 #cx-events .cx-event .cx-event-time {
   font-family: TESQSSRUdVTEFSLlRURg, Georgia, serif;
@@ -848,5 +847,73 @@ c.addEventListener('click',open);
   var iv = setInterval(sweep, 400);
   setTimeout(function(){ clearInterval(iv); sweep(); }, 60000);
   sweep();
+})();
+</script>
+
+<script id="om-fitevents">
+(function(){
+  function fit(){
+    var ev = document.getElementById('cx-events'),
+        s6 = document.getElementById('SECTION6');
+    if(!ev || !s6) return;
+    ev.style.transform = '';
+    ev.style.transformOrigin = 'top left';
+    [].forEach.call(ev.querySelectorAll('.cx-event-name'), function(n){ n.style.fontSize = ''; });
+
+    // 1) chong chu bi cat theo chieu ngang
+    [].forEach.call(ev.querySelectorAll('.cx-event-name'), function(n){
+      var g = 0;
+      while(n.scrollWidth > n.clientWidth + 1 && g < 14){
+        var cur = parseFloat(window.getComputedStyle(n).fontSize) || 44;
+        n.style.fontSize = (cur * 0.92) + 'px';
+        g++;
+      }
+    });
+
+    // 2) chong khoi thò xuong de len muc ke tiep
+    var evTop  = ev.getBoundingClientRect().top + window.pageYOffset;
+    var secBot = s6.getBoundingClientRect().bottom + window.pageYOffset;
+    var avail  = secBot - evTop - 16;
+    var need   = ev.scrollHeight;
+    if(need > avail && avail > 80){
+      var k = Math.max(0.35, avail / need);
+      ev.style.transform = 'scale(' + k.toFixed(4) + ')';
+    }
+  }
+  function run(){ try{ fit(); }catch(e){} }
+  if(document.readyState === 'complete') setTimeout(run, 700);
+  else window.addEventListener('load', function(){ setTimeout(run, 700); });
+  setTimeout(run, 2500);
+  setTimeout(run, 5000);
+  window.addEventListener('resize', function(){ setTimeout(run, 250); });
+  window.addEventListener('orientationchange', function(){ setTimeout(run, 450); });
+})();
+</script>
+
+<script id="om-textscale">
+(function(){
+  function measure(){
+    if(!document.body) return 1;
+    var d = document.createElement('div');
+    d.style.cssText = 'position:absolute;left:-9999px;top:0;font-size:14px;line-height:1;white-space:nowrap;padding:0;margin:0;border:0';
+    d.textContent = 'Kiem tra co chu';
+    document.body.appendChild(d);
+    var h = d.getBoundingClientRect().height;
+    d.parentNode.removeChild(d);
+    return h > 0 ? (h / 14) : 1;
+  }
+  function apply(){
+    var k = measure();
+    if(!(k > 1.08)) return;                       // chu binh thuong -> khong dong vao
+    var st = document.getElementById('om-textscale-css');
+    if(!st){ st = document.createElement('style'); st.id = 'om-textscale-css'; document.head.appendChild(st); }
+    var pct = (100 / k).toFixed(1);
+    st.textContent = 'html,body{-webkit-text-size-adjust:' + pct + '%!important;text-size-adjust:' + pct + '%!important}';
+    if(measure() < 0.92) st.textContent = '';     // chinh qua tay -> tra lai nhu cu
+  }
+  function run(){ try{ apply(); }catch(e){} }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  setTimeout(run, 1500);
+  window.addEventListener('orientationchange', function(){ setTimeout(run, 400); });
 })();
 </script>

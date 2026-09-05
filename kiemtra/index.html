@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=420, viewport-fit=cover">
+<title>Kiểm tra máy</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:#111;color:#eee;font-family:-apple-system,Roboto,Arial,sans-serif}
+h1{font-size:19px;margin:0 0 12px;color:#ffd479}
+.kq{border:1px solid #444;border-radius:8px;padding:11px;margin:0 0 10px}
+.nhan{font-size:12px;color:#9a9a9a;letter-spacing:.5px}
+.so{font-size:23px;font-weight:700;color:#fff;word-break:break-all}
+.tot{color:#5ee07a}.xau{color:#ff6b6b}
+.ketluan{border-width:2px;border-color:#ffd479}
+#ref{position:absolute;left:-9999px;top:0;font-size:14px;line-height:1;white-space:nowrap}
+.ua{font-size:11px;color:#888;word-break:break-all;line-height:1.5}
+</style></head><body>
+<h1>Số đo thiết bị</h1>
+<div id="ra"></div>
+<div id="ref">Kiem tra co chu</div>
+<script>
+(function(){
+  var ref=document.getElementById('ref');
+  var caoThat=ref.getBoundingClientRect().height;      // dat font-size 14px, line-height 1 => phai ~14
+  var tiLe=caoThat/14;
+  var vv=window.visualViewport;
+  function o(nhan,gt,lop){
+    return '<div class="kq '+(lop==='k'?'ketluan':'')+'"><div class="nhan">'+nhan+'</div><div class="so '+(lop||'')+'">'+gt+'</div></div>';
+  }
+  var phongChu = tiLe>1.08;
+  var layout=document.documentElement.clientWidth;
+  var h='';
+  h+=o('CHU CO BI PHONG TO KHONG', phongChu ? ('CO - phong '+tiLe.toFixed(2)+' lan') : 'KHONG (dung chuan)', phongChu?'xau k':'tot k');
+  h+=o('Chieu cao chu mau (chuan = 14.0)', caoThat.toFixed(1)+' px', phongChu?'xau':'tot');
+  h+=o('Chieu rong layout (thiet ke = 420)', layout+' px', layout===420?'tot':'xau');
+  h+=o('Chieu rong man hinh (screen.width)', screen.width+' x '+screen.height);
+  h+=o('Ty le diem anh (devicePixelRatio)', window.devicePixelRatio);
+  h+=o('Vung nhin thay (visualViewport)', vv? (Math.round(vv.width)+' x '+Math.round(vv.height)) : 'khong ho tro');
+  h+=o('Muc phong cua trinh duyet (scale)', vv? vv.scale.toFixed(3)+(vv.scale>1.02?'  <= DANG ZOOM BANG 2 NGON':'') : '?', (vv&&vv.scale>1.02)?'xau':'tot');
+  h+=o('window.innerWidth', window.innerWidth);
+  h+='<div class="kq"><div class="nhan">TRINH DUYET</div><div class="ua">'+navigator.userAgent+'</div></div>';
+  document.getElementById('ra').innerHTML=h;
+})();
+</script></body></html>
